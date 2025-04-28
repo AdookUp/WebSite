@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing: menos promesas vacías + crecimiento sostenible.",
   generator: "v0.dev",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicons.ico",
   },
 }
 
