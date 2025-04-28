@@ -10,7 +10,7 @@
   
   ## Tecnologías utilizadas 🛠
   
-  Frontend:
+  Frontend: 
   
   ⚛ React.js
   
