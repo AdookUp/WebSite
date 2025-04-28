@@ -64,9 +64,9 @@ export default function Footer() {
                 promesas vacías + crecimiento sostenible.
               </p>
               <div className="flex gap-4">
-                <SocialLink href="#" icon={<Facebook className="h-5 w-5" />} label="Facebook" />
+                <SocialLink href="https://www.facebook.com/share/15STnNCB3G/?mibextid=wwXIfr" icon={<Facebook className="h-5 w-5" />} label="Facebook" />
                 <SocialLink href="#" icon={<Twitter className="h-5 w-5" />} label="Twitter" />
-                <SocialLink href="#" icon={<Instagram className="h-5 w-5" />} label="Instagram" />
+                <SocialLink href="https://www.instagram.com/adookup?igsh=MW4xNmhvYzcwZG02bw==" icon={<Instagram className="h-5 w-5" />} label="Instagram" />
                 <SocialLink href="#" icon={<Linkedin className="h-5 w-5" />} label="LinkedIn" />
               </div>
             </motion.div>
