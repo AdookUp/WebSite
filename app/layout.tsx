@@ -1,39 +1,120 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter, Montserrat } from "next/font/google"
-import "./globals.css"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
+import type { Metadata, Viewport } from "next";
+import { Inter, Montserrat } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+// Optimización de fuentes con next/font
+const inter = Inter({ 
+  subsets: ["latin"], 
+  variable: "--font-inter",
+  display: "swap" // Mejor rendimiento
+});
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
   weight: ["400", "500", "600", "700"],
-})
+  display: "swap"
+});
 
+// Configuración del viewport (novedad en Next.js 15+)
+export const viewport: Viewport = {
+  themeColor: "#f97316",
+  colorScheme: "light",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
+// Metadata mejorada para SEO
 export const metadata: Metadata = {
-  title: "AdookUp - Estrategia, Tecnología y Marketing Digital",
-  description:
-    "Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing: menos promesas vacías + crecimiento sostenible.",
-  generator: "v0.dev",
-  icons: {
-    icon: "/favicon.ico", // Esta es la línea clave
+  metadataBase: new URL("https://adookup.com"),
+  title: {
+    default: "AdookUp - Estrategia, Tecnología y Marketing Digital",
+    template: "%s | AdookUp",
   },
-}
+  description: "Impulsamos marcas con estrategia, tecnología y enfoque humano.",
+  keywords: ["marketing digital", "SEO", "desarrollo web", "branding"],
+  
+  // OpenGraph
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "https://adookup.com",
+    siteName: "AdookUp",
+    images: [{
+      url: "/og-image.png",
+      width: 1200,
+      height: 630,
+      alt: "AdookUp - Transformación Digital",
+    }],
+  },
 
+  // Twitter Cards
+  twitter: {
+    card: "summary_large_image",
+    creator: "@adookup",
+    images: "/twitter-card.jpg",
+  },
+
+  // Favicons modernos (SVG + PNG)
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+
+  // WebApp Manifest
+  manifest: "/manifest.webmanifest",
+};
+
+// Componente de estructura raíz
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="es">
-      <body className={`${inter.variable} ${montserrat.variable} font-sans`}>
+    <html lang="es" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        {/* Preconexiones críticas */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Schema Markup para sitelinks */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            "name": "AdookUp",
+            "url": "https://adookup.com",
+            "logo": "https://adookup.com/logo.png",
+            "sameAs": [
+              "https://facebook.com/adookup",
+              "https://instagram.com/adookup"
+            ],
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://adookup.com/search?q={search_term}",
+              "query-input": "required name=search_term"
+            }
+          })}
+        </script>
+      </head>
+      
+      <body className={`${inter.variable} ${montserrat.variable} font-sans bg-white text-gray-900 antialiased`}>
         <Navbar />
-        {children}
+        <main className="min-h-[calc(100vh-160px)]">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
-  )
+  );
 }

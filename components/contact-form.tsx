@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { MapPin, Phone, Mail, ArrowRight, Send } from "lucide-react"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
+import emailjs from '@emailjs/browser'
 
 export default function ContactForm() {
   const [mounted, setMounted] = useState(false)
@@ -18,45 +19,85 @@ export default function ContactForm() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState("")
 
-  const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormState((prev) => ({
-      ...prev,
-      [id]: value,
-    }))
+  // Configuración de EmailJS (usa variables de entorno en producción)
+  const EMAILJS_CONFIG = {
+    serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_880tmpo',
+    templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_3llsdd7',
+    userId: process.env.NEXT_PUBLIC_EMAILJS_USER_ID || 'dsmXE8ofwk0YZ4VM-'
   }
 
-  const handleSubmit = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target
+    setFormState(prev => ({ ...prev, [id]: value }))
+    setError("")
+  }
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(email)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validación
+    if (!formState.nombre || !formState.email || !formState.mensaje) {
+      setError("Por favor completa los campos requeridos")
+      return
+    }
+
+    if (!validateEmail(formState.email)) {
+      setError("Por favor ingresa un email válido")
+      return
+    }
+
     setIsSubmitting(true)
+    setError("")
 
-    // Simulación de envío
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      await emailjs.send(
+        EMAILJS_CONFIG.serviceId,
+        EMAILJS_CONFIG.templateId,
+        {
+          from_name: `${formState.nombre} ${formState.apellido}`.trim(),
+          from_email: formState.email,
+          reply_to: formState.email,
+          to_name: "Equipo AdookUp",
+          empresa: formState.empresa || "No especificada",
+          message: formState.mensaje,
+          // Encabezados personalizados para simular remitente
+          custom_headers: JSON.stringify({
+            'X-Original-From': formState.email,
+            'Reply-To': formState.email
+          })
+        },
+        EMAILJS_CONFIG.userId
+      )
+
       setSubmitted(true)
-
-      // Reset form after showing success message
-      setTimeout(() => {
-        setFormState({
-          nombre: "",
-          apellido: "",
-          email: "",
-          empresa: "",
-          mensaje: "",
-        })
-        setSubmitted(false)
-      }, 3000)
-    }, 1500)
+      setFormState({
+        nombre: "",
+        apellido: "",
+        email: "",
+        empresa: "",
+        mensaje: "",
+      })
+    } catch (err) {
+      console.error('Error al enviar:', err)
+      setError("Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente o contáctanos directamente.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   useEffect(() => {
     setMounted(true)
+    emailjs.init(EMAILJS_CONFIG.userId)
   }, [])
 
-  if (!mounted) {
-    return null
-  }
+  if (!mounted) return null
 
   return (
     <section id="contact" className="w-full py-24 bg-gray-50">
@@ -84,6 +125,17 @@ export default function ContactForm() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h3 className="text-xl font-bold mb-6">Envíanos un mensaje</h3>
+            
+            {error && (
+              <motion.div 
+                className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                {error}
+              </motion.div>
+            )}
+
             {submitted ? (
               <motion.div
                 className="flex flex-col items-center justify-center h-80 text-center"
@@ -94,9 +146,12 @@ export default function ContactForm() {
                 <div className="bg-green-100 p-4 rounded-full mb-4">
                   <Send className="h-8 w-8 text-green-600" />
                 </div>
-                <h4 className="text-xl font-bold text-green-600 mb-2">¡Mensaje enviado!</h4>
-                <p className="text-gray-600">
-                  Gracias por contactarnos. Nos pondremos en contacto contigo lo antes posible.
+                <h4 className="text-xl font-bold text-green-600 mb-2">¡Mensaje enviado con éxito!</h4>
+                <p className="text-gray-600 mb-2">
+                  Hemos recibido tu solicitud de análisis estratégico.
+                </p>
+                <p className="text-sm text-gray-500">
+                  Te responderemos a <span className="font-medium">{formState.email}</span> en menos de 24 horas.
                 </p>
               </motion.div>
             ) : (
@@ -104,7 +159,7 @@ export default function ContactForm() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="nombre" className="text-sm font-medium">
-                      Nombre
+                      Nombre <span className="text-red-500">*</span>
                     </label>
                     <Input
                       id="nombre"
@@ -125,13 +180,12 @@ export default function ContactForm() {
                       className="border-gray-200 focus:border-orange-500"
                       value={formState.apellido}
                       onChange={handleChange}
-                      required
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium">
-                    Email
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <Input
                     id="email"
@@ -153,12 +207,11 @@ export default function ContactForm() {
                     className="border-gray-200 focus:border-orange-500"
                     value={formState.empresa}
                     onChange={handleChange}
-                    required
                   />
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="mensaje" className="text-sm font-medium">
-                    Mensaje
+                    Mensaje <span className="text-red-500">*</span>
                   </label>
                   <Textarea
                     id="mensaje"
