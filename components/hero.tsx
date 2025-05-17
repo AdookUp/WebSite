@@ -77,7 +77,7 @@ export default function Hero() {
               estratégicas
             </h1>
             <p className="text-xl text-gray-600 md:text-2xl max-w-2xl mx-auto mt-6">
-              Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing digital.
+              Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del <span className="font-semibold">marketing digital</span> para hacer crecer tu negocio. Tu <span className="font-semibold">agencia de marketing digital</span> de confianza.
             </p>
           </motion.div>
 
