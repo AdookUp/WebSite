@@ -60,8 +60,8 @@ export default function Footer() {
                 </div>
               </Link>
               <p className="text-gray-600 mb-6">
-                Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing: menos
-                promesas vacías + crecimiento sostenible.
+                Como agencia de marketing digital, impulsamos marcas con estrategia, tecnología y enfoque humano. 
+                La nueva era del marketing: menos promesas vacías + crecimiento sostenible.
               </p>
               <div className="flex gap-4">
                 <SocialLink href="https://www.facebook.com/share/15STnNCB3G/?mibextid=wwXIfr" icon={<Facebook className="h-5 w-5" />} label="Facebook" />

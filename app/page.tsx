@@ -10,7 +10,7 @@ import Methodology from "@/components/methodology"
 
 export default function Home() {
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden" aria-label="Contenido principal de AdookUp - Agencia de Marketing Digital">
       <Hero />
       <WhyUs />
       <Services />

@@ -57,9 +57,8 @@ export default function Hero() {
               </div>
 
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none lg:text-7xl/none">
-              El poder de las{" "}
-              <span className="text-orange-500 inline-block relative">
-                ideas
+              Tu <span className="text-orange-500 inline-block relative">
+                agencia de marketing digital
                 <svg
                   className="absolute -bottom-2 left-0 w-full h-2 text-orange-500/30"
                   viewBox="0 0 100 12"
@@ -74,10 +73,10 @@ export default function Hero() {
                   />
                 </svg>
               </span>{" "}
-              estratégicas
+              con ideas estratégicas
             </h1>
             <p className="text-xl text-gray-600 md:text-2xl max-w-2xl mx-auto mt-6">
-              Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing digital.
+              Impulsamos marcas con estrategia, tecnología y enfoque humano. La nueva era del marketing digital para tu negocio.
             </p>
           </motion.div>
 
