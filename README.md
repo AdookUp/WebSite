@@ -12,7 +12,7 @@
   
   Frontend: 
   
-  ⚛ React.js
+  ⚛ React.js 
   
   🎨 Tailwind CSS / Bootstrap (opcional)
   
@@ -29,3 +29,4 @@
   📦 npm / yarn
   
   🛠 Git & GitHub
+ muy bien
